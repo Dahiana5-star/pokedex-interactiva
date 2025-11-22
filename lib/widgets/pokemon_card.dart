@@ -5,11 +5,7 @@ class PokemonCard extends StatelessWidget {
   final PokemonBasic pokemon;
   final VoidCallback onTap;
 
-  const PokemonCard({
-    super.key,
-    required this.pokemon,
-    required this.onTap,
-  });
+  const PokemonCard({super.key, required this.pokemon, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

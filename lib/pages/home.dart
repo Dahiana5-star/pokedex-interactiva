@@ -1,9 +1,9 @@
+// ignore: uri_does_not_exist
 import 'package:flutter/material.dart';
 import '../services/pokemon_service.dart';
 import '../models/pokemon_basic.dart';
 import '../widgets/pokemon_card.dart';
-import '../pages/detail.dart';
-
+import '../pages/detail_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -67,10 +67,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Pokédex"),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text("Pokédex"), centerTitle: true),
       body: Column(
         children: [
           // 🔎 Barra de búsqueda
@@ -106,7 +103,8 @@ class _HomePageState extends State<HomePage> {
                             ? const Padding(
                                 padding: EdgeInsets.all(16.0),
                                 child: Center(
-                                    child: CircularProgressIndicator()),
+                                  child: CircularProgressIndicator(),
+                                ),
                               )
                             : const SizedBox();
                       }
@@ -118,8 +116,7 @@ class _HomePageState extends State<HomePage> {
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) =>
-                                DetailPage(id: pokemon.id),
+                            builder: (_) => DetailPage(id: pokemon.id),
                           ),
                         ),
                       );

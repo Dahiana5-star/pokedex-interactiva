@@ -66,10 +66,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Pokédex"),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text("Pokédex"), centerTitle: true),
       body: Column(
         children: [
           // 🔎 Barra de búsqueda
@@ -105,7 +102,8 @@ class _HomePageState extends State<HomePage> {
                             ? const Padding(
                                 padding: EdgeInsets.all(16.0),
                                 child: Center(
-                                    child: CircularProgressIndicator()),
+                                  child: CircularProgressIndicator(),
+                                ),
                               )
                             : const SizedBox();
                       }
@@ -117,8 +115,7 @@ class _HomePageState extends State<HomePage> {
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) =>
-                                DetailPage(id: pokemon.id),
+                            builder: (_) => DetailPage(id: pokemon.id),
                           ),
                         ),
                       );
