@@ -5,7 +5,7 @@ class PokemonService {
   final String baseUrl = "https://pokeapi.co/api/v2/pokemon";
 
   Future<Map<String, dynamic>> fetchPokemonList(int offset) async {
-    final url = Uri.parse("$baseUrl?limit=20&offset=$offset");
+    final url = Uri.parse("$baseUrl?limit=150&offset=$offset");
 
     final res = await http.get(url);
 

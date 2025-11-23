@@ -20,36 +20,26 @@ class _HomePageState extends State<HomePage> {
   bool isLoading = false;
   bool isSearching = false;
 
-  final ScrollController _scrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    fetchMorePokemon();
-
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
-        fetchMorePokemon();
-      }
-    });
+    fetchPokemon(); // carga los 150
   }
 
-  Future<void> fetchMorePokemon() async {
-    if (isLoading) return;
-
+  Future<void> fetchPokemon() async {
     setState(() => isLoading = true);
 
-    final data = await service.fetchPokemonList(offset);
-    final newList = data['results']
+    final data = await service.fetchPokemonList(0); // siempre 0
+
+    final list = data['results']
         .map<PokemonBasic>((json) => PokemonBasic.fromJson(json))
         .toList();
 
     setState(() {
-      pokemonList.addAll(newList);
-      filteredList = pokemonList;
-      offset += 20;
+      pokemonList = list;
+      filteredList = list;
       isLoading = false;
     });
   }
@@ -69,7 +59,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(title: const Text("Pokédex"), centerTitle: true),
       body: Column(
         children: [
-          // 🔎 Barra de búsqueda
+          // Barra de búsqueda
           Padding(
             padding: const EdgeInsets.all(10),
             child: TextField(
@@ -86,41 +76,26 @@ class _HomePageState extends State<HomePage> {
           ),
 
           Expanded(
-            child: filteredList.isEmpty
-                ? const Center(
-                    child: Text(
-                      "No se encontraron resultados",
-                      style: TextStyle(fontSize: 18),
+           child: isLoading
+      ? const Center(child: CircularProgressIndicator())
+      : filteredList.isEmpty
+          ? const Center(child: Text("No se encontraron resultados"))
+          : ListView.builder(
+              itemCount: filteredList.length,
+              itemBuilder: (context, index) {
+                final pokemon = filteredList[index];
+
+                return PokemonCard(
+                  pokemon: pokemon,
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => DetailPage(id: pokemon.id),
                     ),
-                  )
-                : ListView.builder(
-                    controller: _scrollController,
-                    itemCount: filteredList.length + 1,
-                    itemBuilder: (context, index) {
-                      if (index == filteredList.length) {
-                        return isLoading
-                            ? const Padding(
-                                padding: EdgeInsets.all(16.0),
-                                child: Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                              )
-                            : const SizedBox();
-                      }
-
-                      final pokemon = filteredList[index];
-
-                      return PokemonCard(
-                        pokemon: pokemon,
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => DetailPage(id: pokemon.id),
-                          ),
-                        ),
-                      );
-                    },
                   ),
+                );
+              },
+            ),
           ),
         ],
       ),
