@@ -20,6 +20,8 @@ class PokemonCard extends StatelessWidget {
           padding: const EdgeInsets.all(12),
           child: Row(
             children: [
+
+              // Hero Animation
               Hero(
                 tag: "pokemon-${pokemon.id}",
                 child: Image.network(
@@ -28,12 +30,19 @@ class PokemonCard extends StatelessWidget {
                   fit: BoxFit.contain,
                 ),
               ),
+
               const SizedBox(width: 16),
-              Text(
-                pokemon.name.toUpperCase(),
-                style: GoogleFonts.pressStart2p(
-                  fontSize: 12,
-                  color: Colors.white,
+
+              // se adapta al espacio
+              Expanded(
+                child: Text(
+                  pokemon.name.toUpperCase(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.pressStart2p(
+                    fontSize: 12,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ],
