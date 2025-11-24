@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mi_pokedex_interactiva/main.dart';
+import 'package:mi_pokedex_interactiva/pages/favorites_page';
 import '../services/pokemon_service.dart';
 import '../models/pokemon_basic.dart';
 import '../widgets/pokemon_card.dart';
@@ -25,7 +27,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    fetchPokemon(); // carga los 150
+    fetchPokemon(); // carga los 150 pokemon
   }
 
   Future<void> fetchPokemon() async {
@@ -56,7 +58,35 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Pokédex"), centerTitle: true),
+      appBar: AppBar(
+        title: const Text("Pokédex"),
+        centerTitle: true,
+        backgroundColor: const Color(0xFF6C5CE7),
+        elevation: 4,
+        actions: [
+          IconButton(
+            icon: Icon(
+              themeNotifier.value == ThemeMode.dark
+                  ? Icons.light_mode
+                  : Icons.dark_mode,
+            ),
+            onPressed: () {
+              themeNotifier.value = themeNotifier.value == ThemeMode.dark
+                  ? ThemeMode.light
+                  : ThemeMode.dark;
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.star),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const FavoritesPage()),
+              );
+            },
+          ),
+        ],
+      ),
       body: Column(
         children: [
           // Barra de búsqueda
@@ -66,7 +96,7 @@ class _HomePageState extends State<HomePage> {
               controller: _searchController,
               onChanged: searchPokemon,
               decoration: InputDecoration(
-                hintText: "Buscar Pokémon...",
+                hintText: "Buscar Pokémon",
                 prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -76,26 +106,34 @@ class _HomePageState extends State<HomePage> {
           ),
 
           Expanded(
-           child: isLoading
-      ? const Center(child: CircularProgressIndicator())
-      : filteredList.isEmpty
-          ? const Center(child: Text("No se encontraron resultados"))
-          : ListView.builder(
-              itemCount: filteredList.length,
-              itemBuilder: (context, index) {
-                final pokemon = filteredList[index];
+            child: isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : filteredList.isEmpty
+                ? const Center(child: Text("No se encontraron resultados"))
+                : GridView.builder(
+                    padding: const EdgeInsets.all(10),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 5, // 5 columnas
+                          childAspectRatio: 1.2, // ajustar proporción
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                        ),
+                    itemCount: filteredList.length,
+                    itemBuilder: (context, index) {
+                      final pokemon = filteredList[index];
 
-                return PokemonCard(
-                  pokemon: pokemon,
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => DetailPage(id: pokemon.id),
-                    ),
+                      return PokemonCard(
+                        pokemon: pokemon,
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => DetailPage(id: pokemon.id),
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
           ),
         ],
       ),

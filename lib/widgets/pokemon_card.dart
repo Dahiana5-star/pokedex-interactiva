@@ -1,57 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../models/pokemon_basic.dart';
 
 class PokemonCard extends StatelessWidget {
   final PokemonBasic pokemon;
   final VoidCallback onTap;
 
-  const PokemonCard({
-    super.key,
-    required this.pokemon,
-    required this.onTap,
-  });
+  const PokemonCard({super.key, required this.pokemon, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Card(
-        color: const Color(0xFF4A148C), // Morado oscuro
-        margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        elevation: 5,
+        color: const Color(0xFFA29BFE), // lila claro
+        elevation: 4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Padding(
-          padding: const EdgeInsets.all(15),
+          padding: const EdgeInsets.all(12),
           child: Row(
             children: [
-              // Imagen del Pokémon
-              Image.network(
-                pokemon.imageUrl,
-                width: 80,
-                height: 80,
-              ),
-
-              const SizedBox(width: 20),
-
-              // Nombre del Pokémon
-              Expanded(
-                child: Text(
-                  pokemon.name.toUpperCase(),
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.white,
-                  ),
+              Hero(
+                tag: "pokemon-${pokemon.id}",
+                child: Image.network(
+                  pokemon.imageUrl,
+                  height: 100,
+                  fit: BoxFit.contain,
                 ),
               ),
-
-              // ID
+              const SizedBox(width: 16),
               Text(
-                "#${pokemon.id}",
-                style: const TextStyle(
+                pokemon.name.toUpperCase(),
+                style: GoogleFonts.pressStart2p(
                   fontSize: 12,
-                  color: Colors.white70,
+                  color: Colors.white,
                 ),
               ),
             ],

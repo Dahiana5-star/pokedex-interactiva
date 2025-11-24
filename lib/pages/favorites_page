@@ -1,0 +1,65 @@
+import 'package:flutter/material.dart';
+import '../services/favorite_service.dart';
+import '../models/pokemon_basic.dart';
+import '../services/pokemon_service.dart';
+import 'detail_page.dart';
+import '../widgets/pokemon_card.dart';
+
+class FavoritesPage extends StatefulWidget {
+  const FavoritesPage({super.key});
+
+  @override
+  State<FavoritesPage> createState() => _FavoritesPageState();
+}
+
+class _FavoritesPageState extends State<FavoritesPage> {
+  final PokemonService service = PokemonService();
+  List<PokemonBasic> favoritePokemons = [];
+
+  @override
+  void initState() {
+    super.initState();
+    loadFavorites();
+  }
+
+  Future<void> loadFavorites() async {
+    final ids = await FavoriteService.getFavorites();
+    final all = await service.fetchPokemonList(0);
+
+    final list = all["results"]
+        .map<PokemonBasic>((json) => PokemonBasic.fromJson(json))
+        .where((p) => ids.contains(p.id))
+        .toList();
+
+    setState(() => favoritePokemons = list);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Favoritos")),
+      body: favoritePokemons.isEmpty
+          ? const Center(child: Text("No hay favoritos"))
+          : GridView.builder(
+              padding: const EdgeInsets.all(10),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 5,
+                childAspectRatio: 0.9,
+              ),
+              itemCount: favoritePokemons.length,
+              itemBuilder: (_, i) {
+                final pokemon = favoritePokemons[i];
+                return PokemonCard(
+                  pokemon: pokemon,
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => DetailPage(id: pokemon.id),
+                    ),
+                  ),
+                );
+              },
+            ),
+    );
+  }
+}
