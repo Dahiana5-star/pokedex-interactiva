@@ -18,31 +18,37 @@ class PokemonCard extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Padding(
           padding: const EdgeInsets.all(12),
-          child: Row(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-
-              // Hero Animation
               Hero(
                 tag: "pokemon-${pokemon.id}",
                 child: Image.network(
                   pokemon.imageUrl,
-                  height: 100,
+                  height: 90,
                   fit: BoxFit.contain,
                 ),
               ),
+              const SizedBox(height: 8),
 
-              const SizedBox(width: 16),
+              // Número del Pokémon
+              Text(
+                "#${pokemon.id.toString().padLeft(3, '0')}",
+                style: GoogleFonts.pressStart2p(
+                  fontSize: 10,
+                  color: Colors.white70,
+                ),
+              ),
+              const SizedBox(height: 4),
 
-              // se adapta al espacio
-              Expanded(
-                child: Text(
-                  pokemon.name.toUpperCase(),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.pressStart2p(
-                    fontSize: 12,
-                    color: Colors.white,
-                  ),
+              // Nombre
+              Text(
+                pokemon.name.toUpperCase(),
+                textAlign: TextAlign.center,
+                style: GoogleFonts.pressStart2p(
+                  fontSize: 10,
+                  color: Colors.white,
                 ),
               ),
             ],
